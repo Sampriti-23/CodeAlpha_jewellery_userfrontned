@@ -78,3 +78,166 @@ font-family: Arial, Helvetica, sans-serif;
     margin-top: 20px;
   }
 }
+/* COLLECTION SECTION */
+.collection-section {
+  background: #efe6dc;
+  padding: 60px 5%;
+  text-align: center;
+  height: 70vh;
+}
+
+/* TITLE */
+.collection-title {
+  font-size: 36px;
+  color: #8b1e3f;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 40px;
+}
+
+/* CONTAINER */
+.collection-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+/* CARD */
+.collection-card {
+  width: 230px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.collection-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.collection-card p {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* HOVER */
+.collection-card:hover {
+  transform: translateY(-5px);
+}
+/* FAQ SECTION */
+.faq-section {
+  background: #efe6dc;
+  padding: 80px 5%;
+}
+
+/* CONTAINER */
+.faq-container {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+/* LEFT */
+.faq-left h2 {
+  font-size: 40px;
+  color: #8b1e3f;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+/* RIGHT */
+.faq-right {
+  flex: 1;
+}
+
+/* ITEM */
+.faq-item {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  background: #ffe5ce;
+}
+
+/* QUESTION */
+.faq-question {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ANSWER */
+.faq-answer {
+  padding: 15px;
+  font-size: 13px;
+  color: #555;
+  border-top: 1px solid #ddd;
+}
+
+/* ACTIVE */
+.faq-item.active {
+  border-color: #8b1e3f;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .faq-container {
+    flex-direction: column;
+  }
+
+  .faq-left h2 {
+    font-size: 28px;
+  }
+}
+/* FEATURES SECTION */
+.features-section {
+  background: linear-gradient(to right, #fae1be, #d8c3a5);
+  padding: 40px 5%;
+  height: 30vh;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* EACH FEATURE */
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ICON */
+.icon {
+  width: 70px;
+  height: 70px;
+  border: 1px solid #333;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 28px;
+}
+
+/* TEXT */
+.feature h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.feature p {
+  font-size: 18px;
+  font-style: italic;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .features-section {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
