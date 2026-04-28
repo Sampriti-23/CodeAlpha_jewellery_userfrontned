@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { loginUser } from "../../Reducer/AuthSlice";
 
+
 const Login = ({ closeModal,openRegisterModal }) => {
   const dispatch = useDispatch();
 
@@ -28,9 +29,6 @@ const Login = ({ closeModal,openRegisterModal }) => {
 
         // ✅ Close modal
         closeModal();
-
-        // ✅ Reload UI to update navbar
-        window.location.reload();
       } else {
         alert("Invalid credentials ❌");
       }
@@ -78,7 +76,10 @@ const Login = ({ closeModal,openRegisterModal }) => {
        <p className="login-link">
   Don't have an account?
   <button
-    onClick={() => openRegisterModal()}   // ✅ ONLY THIS
+    onClick={() => {
+  closeModal();          // close login
+  openRegisterModal();   // open register
+}}   // ✅ ONLY THIS
   >
     <u>Register</u>
   </button>

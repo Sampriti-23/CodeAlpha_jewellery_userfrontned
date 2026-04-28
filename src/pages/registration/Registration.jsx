@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { registerUser } from "../../Reducer/AuthSlice";
 
-const RegisterModal = ({ closeModal, openLogin }) => {
+const RegisterModal = ({ closeModal, openLoginModal }) => {
 
   const dispatch = useDispatch();
 
@@ -91,7 +91,7 @@ const RegisterModal = ({ closeModal, openLogin }) => {
 
         <p className="login-link">
           Already have an account?
-          <button onClick={() => openLogin()}>
+          <button onClick={() => openLoginModal()}>
             <u>Login</u>
           </button>
         </p>
