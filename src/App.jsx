@@ -4,7 +4,8 @@ import Front from "./pages/home/Front.jsx";
 import Login from "./pages/login/Login.jsx";
 import RegisterModal from "./pages/registration/Registration.jsx";
 import CategoryPage from "./pages/Category/Category.jsx";
-//import Cart from "./pages/cart/Cart.jsx";
+import Cart from "./pages/Cart/Cart.jsx";
+import Wishlist from "./pages/Wishlist/Wishlist.jsx";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterModal />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
-        {/* <Route path="/cart" element={<Cart />} /> */}
+        <Route path="/cart" element={<Cart />} /> 
+        <Route path="/wishlist" element={<Wishlist />} />
       </Routes>
     </BrowserRouter>
   );
