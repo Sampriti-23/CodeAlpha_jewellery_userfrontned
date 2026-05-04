@@ -42,13 +42,11 @@
 
 .links li a {
   text-decoration: none;
-  color: white;
+  color: #290a13;
   font-size: 14px;
 }
 
-.links li a:hover {
-  color: #8b1e3f;
-}
+
 
 /* RIGHT */
 .right {
@@ -116,6 +114,17 @@
   margin: 15px 0;
   cursor: pointer;
 }
+/* --- Fix for Sidebar Links --- */
+.sidebar ul li a {
+  text-decoration: none; /* Removes the underline */
+  color: inherit; /* Makes the text color match the rest of the list */
+  display: block; /* Makes the whole area clickable */
+}
+
+/* Optional: Add a nice hover effect using your brand color */
+.sidebar ul li a:hover {
+  color: #7e2a40; 
+}
 
 .logout {
   color: red;
@@ -179,35 +188,64 @@
   cursor: pointer;
   font-weight: bold;
 }
-
-/* DROPDOWN */
-.user-dropdown {
-  position: absolute;
-  top: 45px;
-  right: 0;
-  background: white;
-  width: 160px;
-  border-radius: 6px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  padding: 10px 0;
-  z-index: 1000;
+/* USER ACTIONS (cart + user icon in one line) */
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
-.user-dropdown p {
-  margin: 0;
-  padding: 10px 15px;
-}
-
-.user-dropdown a {
+/* CART ICON */
+.cart-icon {
+  font-size: 22px;
   text-decoration: none;
-  color: black;
+  cursor: pointer;
 }
 
-.user-dropdown p:hover {
-  background: #f5eaea;
-  color: #8b1e3f;
+.cart-icon:hover {
+  transform: scale(1.1);
 }
 
-.logout {
-  color: red;
+/* 1. Make sure the parent list item is the anchor point */
+.navbar .links .brands {
+  position: relative;
+  cursor: pointer;
+}
+
+/* 2. The Dropdown Box */
+.navbar .links .brands .dropdown {
+  position: absolute;
+  top: 100%; /* Pushes it exactly below the text */
+  left: -10px; /* Aligns it nicely with the text */
+  background-color: #ffffff;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.08); /* Soft, elegant shadow */
+  min-width: 160px;
+  z-index: 1000;
+  border-radius: 6px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+}
+
+/* 3. Remove default link styling for the router Links inside */
+.navbar .links .brands .dropdown a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 4. The individual dropdown items */
+.navbar .links .brands .dropdown p {
+  margin: 0;
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333333;
+  transition: all 0.2s ease-in-out;
+}
+
+/* 5. The Hover Effect (Using your pink/burgundy theme colors) */
+.navbar .links .brands .dropdown p:hover {
+  background-color: #fcf4f5; /* Very light pink background */
+  color: #7e2a40; /* Deep red/burgundy text */
+  padding-left: 24px; /* Slight slide-right animation on hover */
 }
