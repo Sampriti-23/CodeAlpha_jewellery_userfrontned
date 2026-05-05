@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 
 const GET_CART_URL = "http://localhost:8000/api/cart/getcartsbyid";
-const PLACE_ORDER_URL = "http://localhost:8000/api/order/createorder";
+const PLACE_ORDER_URL = "http://localhost:8000/api/orders/neworder";
+const UPDATE_CART_URL = "http://localhost:8000/api/cart/updatecarts";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -85,6 +86,47 @@ const calculateTotal = () => {
       }
       return total;
     }, 0);
+  };
+
+  // 🔥 NEW: Handle Increase / Decrease Quantity
+  const handleUpdateQuantity = async (productId, currentQty, change) => {
+    const newQty = currentQty + change;
+    
+    // Don't let the quantity go below 1 (Use the trash button for deleting!)
+    if (newQty < 1) return; 
+
+    const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
+    const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+    
+    let currentUserId = null;
+    if (userString && userString !== "undefined") {
+      const userObj = JSON.parse(userString);
+      currentUserId = userObj._id || userObj.id;
+    }
+
+    try {
+      // Call your backend updatecart route!
+      const response = await fetch(`${UPDATE_CART_URL}/${currentUserId}`, {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({ 
+          userId: currentUserId, 
+          productId: productId, 
+          qty: newQty 
+        })
+      });
+
+      if (response.ok) {
+        fetchCart(); // Instantly reload the cart to update the Total ₹ Price!
+      } else {
+        console.error("Failed to update quantity");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+    }
   };
 
   const handleShippingChange = (e) => {
@@ -179,9 +221,23 @@ const calculateTotal = () => {
                   <div className="item-actions-right">
                     <h4 className="total-item-price">₹{item.product.price * item.qty}</h4>
                     <div className="controls">
-                      <div className="qty-selector">
-                        <span>Qty: {item.qty}</span>
-                      </div>
+                      <div className="qty-selector" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+  <button 
+    onClick={() => handleUpdateQuantity(item.product._id, item.qty, -1)}
+    style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}
+  >
+    -
+  </button>
+  
+  <span style={{ fontWeight: 'bold' }}>{item.qty}</span>
+  
+  <button 
+    onClick={() => handleUpdateQuantity(item.product._id, item.qty, 1)}
+    style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}
+  >
+    +
+  </button>
+</div>
                       <button className="icon-btn heart-btn"><FaHeart /></button>
                       <button className="icon-btn delete-btn"><FaTrash /></button>
                     </div>
@@ -244,7 +300,7 @@ const calculateTotal = () => {
           <div className="success-modal">
             <h2>🎉 Order Placed Successfully!</h2>
             <p>Your order has been confirmed and will be delivered soon.</p>
-            <button onClick={() => { setShowSuccess(false); navigate('/my-orders'); }}>
+            <button onClick={() => { setShowSuccess(false); navigate('/myorders'); }}>
               View My Orders
             </button>
           </div>

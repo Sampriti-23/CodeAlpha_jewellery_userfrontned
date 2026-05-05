@@ -3,61 +3,95 @@ import { FaTrash, FaShoppingCart } from "react-icons/fa";
 import Navbar from "../../layout/navbar/Navbar";
 import "./Wishlist.css";
 
-const GET_ALL_PRODUCTS_URL = "http://localhost:8000/api/products/getallproducts";
-const ADD_TO_CART_URL = "http://localhost:8000/api/cart/add";
+// 🔥 USING YOUR NEW DATABASE URLS
+const GET_WISHLIST_URL = "http://localhost:8000/api/wishlist/getwishlist";
+const TOGGLE_WISHLIST_URL = "http://localhost:8000/api/wishlist/toggle";
+const ADD_TO_CART_URL = "http://localhost:8000/api/cart/newcart"; // Matched to your CategoryPage route!
 
 const Wishlist = () => {
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Get Wishlist IDs from LocalStorage
-  const getWishlistIds = () => JSON.parse(localStorage.getItem("wishlist")) || [];
+  // Helper to grab secure user data
+  const getUserData = () => {
+    const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
+    const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+    let userId = null;
+    if (userString && userString !== "undefined") {
+      userId = JSON.parse(userString)._id || JSON.parse(userString).id;
+    }
+    return { userId, token };
+  };
+
+  const fetchWishlist = async () => {
+    const { userId, token } = getUserData();
+    
+    if (!userId || !token) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${GET_WISHLIST_URL}/${userId}`, {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        // The backend populates the 'products' array for us!
+        setWishlistProducts(data.products || []);
+      }
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchWishlist = async () => {
-      const savedIds = getWishlistIds();
-      if (savedIds.length === 0) {
-        setIsLoading(false);
-        return;
-      }
-
-      try {
-        // Fetch all products, then filter only the ones that are in the wishlist array
-        const response = await fetch(GET_ALL_PRODUCTS_URL);
-        const allProducts = await response.json();
-        
-        const filtered = allProducts.filter(product => savedIds.includes(product._id));
-        setWishlistProducts(filtered);
-      } catch (error) {
-        console.error("Error fetching wishlist:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchWishlist();
   }, []);
 
-  const handleRemoveFromWishlist = (productId) => {
-    const currentIds = getWishlistIds();
-    const updatedIds = currentIds.filter(id => id !== productId);
-    localStorage.setItem("wishlist", JSON.stringify(updatedIds));
-    
-    // Update UI
+  const handleRemoveFromWishlist = async (productId) => {
+    const { userId, token } = getUserData();
+    if (!userId) return;
+
+    // Remove instantly from UI for snappy feel
     setWishlistProducts(wishlistProducts.filter(p => p._id !== productId));
+
+    try {
+      await fetch(TOGGLE_WISHLIST_URL, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ userId, productId })
+      });
+    } catch (err) {
+      console.error("Error removing item:", err);
+    }
   };
 
   const handleAddToCart = async (productId) => {
-    const userId = sessionStorage.getItem("userId") || JSON.parse(sessionStorage.getItem("user"))?._id;
-    if (!userId) return alert("Please log in to add to cart.");
+    const { userId, token } = getUserData();
+    if (!userId || !token) return alert("Please log in to add to cart.");
 
     try {
       const res = await fetch(ADD_TO_CART_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // 🔥 Added missing Token!
+        },
         body: JSON.stringify({ userId, productId, qty: 1 })
       });
-      if (res.ok) alert("Added to cart from wishlist!");
+      
+      if (res.ok) {
+        alert("Added to cart from wishlist! 🛒");
+      } else {
+        alert("Failed to add to cart.");
+      }
     } catch (err) {
       console.error(err);
     }
@@ -82,10 +116,12 @@ const Wishlist = () => {
             {wishlistProducts.map(product => (
               <div className="wishlist-card" key={product._id}>
                 <img src={product.image || "https://via.placeholder.com/200"} alt={product.name} />
+                
                 <div className="wishlist-info">
                   <h4>{product.name}</h4>
-                  <p className="price">₹{product.price}</p>
+<p className="price">₹{product.price.toLocaleString()}</p>
                 </div>
+                
                 <div className="wishlist-actions">
                   <button className="add-cart-btn" onClick={() => handleAddToCart(product._id)}>
                     <FaShoppingCart /> Add
@@ -94,6 +130,7 @@ const Wishlist = () => {
                     <FaTrash />
                   </button>
                 </div>
+                
               </div>
             ))}
           </div>

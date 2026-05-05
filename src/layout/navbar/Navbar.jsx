@@ -148,7 +148,7 @@ const Navbar = () => {
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef}>
         <div className="close" onClick={() => setSidebarOpen(false)}>✕</div>
         <ul>
-          <li className="profile"><Link to="/my-orders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
+          <li className="profile"><Link to="/myorders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
           <li  className="profile"><Link to="/wishlist" onClick={() => setSidebarOpen(false)}>Your Wishlist</Link></li>
           <li className="profile"><Link to="/profile" onClick={() => setSidebarOpen(false)}>Your Profile</Link></li>
           <li onClick={handleLogout} className="logout">Logout</li>

@@ -1,77 +1,86 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import Navbar from "../../layout/navbar/Navbar"; // Assuming you want Navbar here
+import Navbar from "../../layout/navbar/Navbar"; 
 import "./Category.css";
 
 const GET_ALL_PRODUCTS_URL = "http://localhost:8000/api/products/getallproducts";
 const ADD_TO_CART_URL = "http://localhost:8000/api/cart/newcart";
+// 🔥 ADDED WISHLIST URLS
+const GET_WISHLIST_URL = "http://localhost:8000/api/wishlist/getwishlist";
+const TOGGLE_WISHLIST_URL = "http://localhost:8000/api/wishlist/toggle";
 
 const CategoryPage = () => {
   const { categoryName } = useParams(); 
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // 🔥 FIX 2: Initialize Wishlist directly from LocalStorage so hearts stay red if refreshed!
-  const [wishlistItems, setWishlistItems] = useState(() => {
-    const savedWishlist = localStorage.getItem("wishlist");
-    return savedWishlist ? JSON.parse(savedWishlist) : [];
-  });
+  // 🔥 Start empty, we will fill this from the database!
+  const [wishlistItems, setWishlistItems] = useState([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProductsAndWishlist = async () => {
       try {
         setIsLoading(true);
+        
+        // 1. Fetch Products
         const response = await fetch(GET_ALL_PRODUCTS_URL);
         const data = await response.json();
-        
         const filteredProducts = data.filter(
           (product) => product.category.toLowerCase() === categoryName.toLowerCase()
         );
-        
         setProducts(filteredProducts);
+
+        // 2. Fetch User's Wishlist from Database
+        const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
+        const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+        
+        if (userString && userString !== "undefined" && token) {
+          const userObj = JSON.parse(userString);
+          const userId = userObj._id || userObj.id;
+
+          const wishRes = await fetch(`${GET_WISHLIST_URL}/${userId}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          
+          if (wishRes.ok) {
+            const wishData = await wishRes.json();
+            // The backend sends whole products, we just need their IDs for the heart check!
+            if (wishData.products) {
+              const savedIds = wishData.products.map(p => p._id);
+              setWishlistItems(savedIds);
+            }
+          }
+        }
+        
         setIsLoading(false);
       } catch (error) {
-        console.error("Failed to fetch products", error);
+        console.error("Failed to fetch data", error);
         setIsLoading(false);
       }
     };
-    fetchProducts();
+    fetchProductsAndWishlist();
   }, [categoryName]); 
 
-  // 🔥 FIX 1: Look inside sessionStorage to get the correct User ID
-const handleAddToCart = async (productId) => {
-    // 1. Check BOTH storages (just in case your Login component uses localStorage)
+  const handleAddToCart = async (productId) => {
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
     const token = sessionStorage.getItem("token") || localStorage.getItem("token");
-    
     let userId = null;
 
-    // 2. Safely parse the user object
     if (userString && userString !== "undefined") {
       try {
         const userObj = JSON.parse(userString);
-        // Look for _id (MongoDB default) OR id
         userId = userObj._id || userObj.id; 
       } catch (e) {
         console.error("Could not parse user data:", e);
       }
     }
 
-    // 🛑 DEBUGGING: This will tell us EXACTLY what is missing!
-    console.log("--- ADD TO CART DEBUG ---");
-    console.log("Token exists?", !!token);
-    console.log("Raw User String:", userString);
-    console.log("Extracted User ID:", userId);
-    console.log("-------------------------");
-
-    // 3. The check that is currently failing
     if (!userId || !token) {
-      alert(`Login Error! Token: ${!!token}, UserID: ${userId}. Open DevTools (F12) Console for details.`);
+      alert(`Please log in to add items to your cart.`);
       return;
     }
 
-    // 4. The actual API Call
     try {
       const res = await fetch(ADD_TO_CART_URL, {
         method: "POST",
@@ -93,23 +102,43 @@ const handleAddToCart = async (productId) => {
       alert(`Could not add to cart: ${err.message}`); 
     }
   };
-  // 🔥 FIX 2: Actually save the Wishlist to LocalStorage so the Wishlist Page can read it
-  const toggleWishlist = (productId) => {
-    let updatedWishlist;
+
+  // 🔥 Database-Powered Wishlist Toggle
+  const toggleWishlist = async (productId) => {
+    const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
+    const token = sessionStorage.getItem("token") || localStorage.getItem("token");
     
-    if (wishlistItems.includes(productId)) {
-      // If it's already in the wishlist, remove it
-      updatedWishlist = wishlistItems.filter(id => id !== productId);
-    } else {
-      // If it's not in the wishlist, add it
-      updatedWishlist = [...wishlistItems, productId];
+    let userId = null;
+    if (userString && userString !== "undefined") {
+      const userObj = JSON.parse(userString);
+      userId = userObj._id || userObj.id;
     }
 
-    // 1. Update the UI state (Heart turns red/empty)
-    setWishlistItems(updatedWishlist);
-    
-    // 2. Save it to the browser so the Wishlist Page can load it!
-    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+    if (!userId || !token) {
+      alert("Please log in to use your wishlist!");
+      return;
+    }
+
+    // 1. Optimistic UI update (makes the heart feel instantly responsive)
+    if (wishlistItems.includes(productId)) {
+      setWishlistItems(wishlistItems.filter(id => id !== productId));
+    } else {
+      setWishlistItems([...wishlistItems, productId]);
+    }
+
+    // 2. Tell the database!
+    try {
+      await fetch(TOGGLE_WISHLIST_URL, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({ userId, productId })
+      });
+    } catch (error) {
+      console.error("Error toggling wishlist in database:", error);
+    }
   };
 
   if (isLoading) {
