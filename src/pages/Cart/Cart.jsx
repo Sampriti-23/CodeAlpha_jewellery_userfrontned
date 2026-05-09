@@ -6,14 +6,17 @@ import "./Cart.css";
 const GET_CART_URL = "http://localhost:8000/api/cart/getcartsbyid";
 const PLACE_ORDER_URL = "http://localhost:8000/api/orders/neworder";
 const UPDATE_CART_URL = "http://localhost:8000/api/cart/updatecarts";
+const REMOVE_CART_URL = "http://localhost:8000/api/cart/deletecarts";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   
   // Checkout Modal States
+
   const [showCheckout, setShowCheckout] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [shippingData, setShippingData] = useState({
     address: "",
     city: "",
@@ -22,12 +25,25 @@ const Cart = () => {
   });
 
   const navigate = useNavigate();
-  const userId = sessionStorage.getItem("userId") || JSON.parse(sessionStorage.getItem("user"))?._id;
-  const userName = JSON.parse(sessionStorage.getItem("user"))?.name;
+const userString =
+  sessionStorage.getItem("user") ||
+  localStorage.getItem("user");
 
-  useEffect(() => {
-    fetchCart();
-  }, [userId]);
+let user = null;
+
+if (userString && userString !== "undefined") {
+  user = JSON.parse(userString);
+}
+
+const userId = user?._id || user?.id;
+
+const userName = user?.name || "Guest";
+ 
+
+useEffect(() => {
+  fetchCart();
+  fetchRecommendations();
+}, [userId]);
 
  const fetchCart = async () => {
     // 1. Grab BOTH the user ID and the security token
@@ -73,6 +89,53 @@ const Cart = () => {
       setIsLoading(false);
     }
   };
+
+useEffect(() => {
+
+  if (userId) {
+
+    fetchCart();
+
+    fetchRecommendations();
+
+  } else {
+
+    setIsLoading(false);
+
+  }
+
+}, [userId]);
+
+const fetchRecommendations = async () => {
+
+  if (!userId) {
+    console.log("❌ USER ID NOT FOUND");
+    return;
+  }
+
+  try {
+
+    console.log("🔥 FETCHING RECOMMENDATIONS FOR:", userId);
+
+    const response = await fetch(
+      `http://localhost:8000/api/recommendations/${userId}`
+    );
+
+    const data = await response.json();
+
+    console.log("🎯 RECOMMENDATION DATA:", data);
+
+    if (data.success) {
+      setRecommendedProducts(data.recommendations || []);
+    }
+
+  } catch (error) {
+
+    console.log("❌ RECOMMEND ERROR:", error);
+
+  }
+
+};
 const calculateTotal = () => {
     if (!cart || !cart.cartItems) return 0;
     
@@ -133,6 +196,40 @@ const calculateTotal = () => {
     setShippingData({ ...shippingData, [e.target.name]: e.target.value });
   };
 
+  const handleRemoveItem = async (productId) => {
+
+  try {
+
+    const token =
+      sessionStorage.getItem("token") ||
+      localStorage.getItem("token");
+
+    const response = await fetch(
+      `http://localhost:8000/api/cart/deletecarts/${userId}/${productId}`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("DELETE RESPONSE => ", data);
+
+    if (response.ok) {
+      fetchCart();
+    }
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+};
   // Submit the Order to the Backend
   const handleConfirmOrder = async (e) => {
     e.preventDefault();
@@ -238,13 +335,56 @@ const calculateTotal = () => {
     +
   </button>
 </div>
-                      <button className="icon-btn heart-btn"><FaHeart /></button>
-                      <button className="icon-btn delete-btn"><FaTrash /></button>
+ 
+ <button
+  className="icon-btn delete-btn"
+  onClick={() =>
+    handleRemoveItem(item.product._id)
+  }
+>
+  <FaTrash />
+</button>
                     </div>
                   </div>
                 </div>
               );
             })}
+
+            {/* RECOMMENDATIONS */}
+
+<div className="recommend-section">
+
+  <h2>Recommended For You</h2>
+
+  <div className="recommend-grid">
+
+    {recommendedProducts.map((item) => (
+
+      <div className="recommend-card" key={item._id}>
+
+        <img
+          src={item.image}
+          alt={item.name}
+        />
+
+        <h4>{item.name}</h4>
+
+        <p>{item.category}</p>
+
+        <h3>₹{item.price}</h3>
+
+        <button className="recommend-btn">
+          Add To Cart
+        </button>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</div>
+
           </div>
 
           {/* RIGHT: SUMMARY */}

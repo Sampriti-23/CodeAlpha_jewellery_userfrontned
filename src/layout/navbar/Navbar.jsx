@@ -9,7 +9,7 @@ const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
-  const [showBrands, setShowBrands] = useState(false);
+ 
   const [showCollection, setShowCollection] = useState(false); // Added for Collection
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -20,7 +20,7 @@ const Navbar = () => {
   const token = sessionStorage.getItem("token");
   const user = JSON.parse(sessionStorage.getItem("user"));
 
-  const brands = ["Giva", "Palmonas", "Kalyan", "You Bella", "Voylla","Others"];
+
   const categories = ["Ring", "Necklace", "Earrings", "Bracelet", "Pendant"];
 
   /* CLOSE SIDEBAR */
@@ -93,21 +93,7 @@ const Navbar = () => {
               )}
             </li>
 
-            {/* BRANDS DROPDOWN */}
-            <li
-              className="brands"
-              onMouseEnter={() => setShowBrands(true)}
-              onMouseLeave={() => setShowBrands(false)}
-            >
-              Brands
-              {showBrands && (
-                <div className="dropdown">
-                  {brands.map((brand, index) => (
-                    <p key={index}>{brand}</p>
-                  ))}
-                </div>
-              )}
-            </li>
+           
           </ul>
         </div>
 
