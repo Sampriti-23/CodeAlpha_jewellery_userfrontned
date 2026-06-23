@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { registerUser } from "../../Reducer/AuthSlice";
 
+
 const RegisterModal = ({ closeModal, openLoginModal }) => {
 
   const dispatch = useDispatch();
