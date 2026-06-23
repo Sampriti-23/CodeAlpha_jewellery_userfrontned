@@ -2,7 +2,7 @@ import React from "react";
 import "./Registration.css";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { registerUser } from "../../Reducer/AuthSlice";
+import { registerUser } from "../../reducer/AuthSlice";
 
 
 const RegisterModal = ({ closeModal, openLoginModal }) => {

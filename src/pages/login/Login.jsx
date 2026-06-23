@@ -2,7 +2,7 @@ import React from "react";
 import "./Login.css";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginUser } from "../../Reducer/AuthSlice";
+import { loginUser } from "../../reducer/AuthSlice";
 
 
 
