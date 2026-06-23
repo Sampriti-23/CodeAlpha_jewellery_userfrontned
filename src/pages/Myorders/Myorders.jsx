@@ -18,10 +18,10 @@ const MyOrders = () => {
 
       // 🛑 ADD THESE TWO LINES FOR DEBUGGING:
       console.log("🕵️‍♂️ FRONTEND IS ASKING FOR USER ID:", userId);
-      console.log("🌍 EXACT URL:", `http://localhost:8000/api/orders/getuserorders/${userId}`);
+      console.log("🌍 EXACT URL:", `https://codealpha-jewellery-backend.onrender.com/api/orders/getuserorders/${userId}`);
 
       try {
-        const response = await fetch(`http://localhost:8000/api/orders/getuserorders/${userId}`);
+        const response = await fetch(`https://codealpha-jewellery-backend.onrender.com/api/orders/getuserorders/${userId}`);
         if (response.ok) {
           const data = await response.json();
           

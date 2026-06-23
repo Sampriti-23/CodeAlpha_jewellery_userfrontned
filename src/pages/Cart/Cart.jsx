@@ -3,10 +3,10 @@ import { FaHeart, FaTrash, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
 
-const GET_CART_URL = "http://localhost:8000/api/cart/getcartsbyid";
-const PLACE_ORDER_URL = "http://localhost:8000/api/orders/neworder";
-const UPDATE_CART_URL = "http://localhost:8000/api/cart/updatecarts";
-const REMOVE_CART_URL = "http://localhost:8000/api/cart/deletecarts";
+const GET_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/getcartsbyid";
+const PLACE_ORDER_URL = "https://codealpha-jewellery-backend.onrender.com/api/orders/neworder";
+const UPDATE_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/updatecarts";
+const REMOVE_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/deletecarts";
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
