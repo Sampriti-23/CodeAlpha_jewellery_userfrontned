@@ -4,11 +4,12 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import Navbar from "../../layout/navbar/Navbar"; 
 import "./Category.css";
 
-const GET_ALL_PRODUCTS_URL = "https://codealpha-jewellery-backend.onrender.com/api/products/getallproducts";
-const ADD_TO_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/newcart";
+const baseurl ="http://localhost:8000";
+const GET_ALL_PRODUCTS_URL = `${baseurl}/api/products/getallproducts`;
+const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`;
 // 🔥 ADDED WISHLIST URLS
-const GET_WISHLIST_URL = "https://codealpha-jewellery-backend.onrender.com/api/wishlist/getwishlist";
-const TOGGLE_WISHLIST_URL = "https://codealpha-jewellery-backend.onrender.com/api/wishlist/toggle";
+const GET_WISHLIST_URL = `${baseurl}/api/wishlist/getwishlist`;
+const TOGGLE_WISHLIST_URL = `${baseurl}/api/wishlist/toggle`;
 
 const CategoryPage = () => {
   const { categoryName } = useParams(); 

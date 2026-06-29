@@ -4,9 +4,10 @@ import Navbar from "../../layout/navbar/Navbar";
 import "./Wishlist.css";
 
 // 🔥 USING YOUR NEW DATABASE URLS
-const GET_WISHLIST_URL = "https://codealpha-jewellery-backend.onrender.com/api/wishlist/getwishlist";
-const TOGGLE_WISHLIST_URL = "https://codealpha-jewellery-backend.onrender.com/api/wishlist/toggle";
-const ADD_TO_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/newcart"; // Matched to your CategoryPage route!
+const baseurl="http://localhost:8000"
+const GET_WISHLIST_URL = `${baseurl}/api/wishlist/getwishlist`;
+const TOGGLE_WISHLIST_URL = `${baseurl}/api/wishlist/toggle`;
+const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`; // Matched to your CategoryPage route!
 
 const Wishlist = () => {
   const [wishlistProducts, setWishlistProducts] = useState([]);

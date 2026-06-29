@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../layout/navbar/Navbar";
 import "./Myorders.css";
 
+const baseurl ="http://localhost:8000";
+
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,10 +20,10 @@ const MyOrders = () => {
 
       // 🛑 ADD THESE TWO LINES FOR DEBUGGING:
       console.log("🕵️‍♂️ FRONTEND IS ASKING FOR USER ID:", userId);
-      console.log("🌍 EXACT URL:", `https://codealpha-jewellery-backend.onrender.com/api/orders/getuserorders/${userId}`);
+      console.log("🌍 EXACT URL:", `${baseurl}/api/orders/getuserorders/${userId}`);
 
       try {
-        const response = await fetch(`https://codealpha-jewellery-backend.onrender.com/api/orders/getuserorders/${userId}`);
+        const response = await fetch(`${baseurl}/api/orders/getuserorders/${userId}`);
         if (response.ok) {
           const data = await response.json();
           

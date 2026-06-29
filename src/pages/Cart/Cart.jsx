@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FaHeart, FaTrash, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
-
-const GET_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/getcartsbyid";
-const PLACE_ORDER_URL = "https://codealpha-jewellery-backend.onrender.com/api/orders/neworder";
-const UPDATE_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/updatecarts";
-const REMOVE_CART_URL = "https://codealpha-jewellery-backend.onrender.com/api/cart/deletecarts";
+const baseurl="http://localhost:8000";
+const GET_CART_URL = `${baseurl}/api/cart/getcartsbyid`;
+const PLACE_ORDER_URL = `${baseurl}/api/orders/neworder`;
+const UPDATE_CART_URL = `${baseurl}/api/cart/updatecarts`;
+const REMOVE_CART_URL = `${baseurl}/api/cart/deletecarts`;
 
 const Cart = () => {
   const [cart, setCart] = useState(null);
@@ -118,7 +118,7 @@ const fetchRecommendations = async () => {
     console.log("🔥 FETCHING RECOMMENDATIONS FOR:", userId);
 
     const response = await fetch(
-      `http://localhost:8000/api/recommendations/${userId}`
+      `${baseurl}/api/recommendations/${userId}`
     );
 
     const data = await response.json();
@@ -205,7 +205,7 @@ const calculateTotal = () => {
       localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:8000/api/cart/deletecarts/${userId}/${productId}`,
+      `${baseurl}/api/cart/deletecarts/${userId}/${productId}`,
       {
         method: "DELETE",
 
