@@ -162,7 +162,7 @@ const CategoryPage = () => {
                 
                 <div className="product-image-wrapper">
                   <img 
-                    src={product.image || "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop"} 
+                    src={`${baseurl}${product.image}` || "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop"} 
                     alt={product.name} 
                     className="product-image"
                   />
