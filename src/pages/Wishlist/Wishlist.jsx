@@ -4,7 +4,7 @@ import Navbar from "../../layout/navbar/Navbar";
 import "./Wishlist.css";
 
 // 🔥 USING YOUR NEW DATABASE URLS
-const baseurl="http://localhost:8000"
+const baseurl="https://codealpha-jewellery-backend.onrender.com"
 const GET_WISHLIST_URL = `${baseurl}/api/wishlist/getwishlist`;
 const TOGGLE_WISHLIST_URL = `${baseurl}/api/wishlist/toggle`;
 const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`; // Matched to your CategoryPage route!

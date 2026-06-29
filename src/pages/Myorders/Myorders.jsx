@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../layout/navbar/Navbar";
 import "./Myorders.css";
 
-const baseurl ="http://localhost:8000";
+const baseurl ="https://codealpha-jewellery-backend.onrender.com";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);

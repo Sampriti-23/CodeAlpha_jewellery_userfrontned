@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaHeart, FaTrash, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./Cart.css";
-const baseurl="http://localhost:8000";
+const baseurl="https://codealpha-jewellery-backend.onrender.com";
 const GET_CART_URL = `${baseurl}/api/cart/getcartsbyid`;
 const PLACE_ORDER_URL = `${baseurl}/api/orders/neworder`;
 const UPDATE_CART_URL = `${baseurl}/api/cart/updatecarts`;

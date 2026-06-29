@@ -4,7 +4,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import Navbar from "../../layout/navbar/Navbar"; 
 import "./Category.css";
 
-const baseurl ="http://localhost:8000";
+const baseurl ="https://codealpha-jewellery-backend.onrender.com";
 const GET_ALL_PRODUCTS_URL = `${baseurl}/api/products/getallproducts`;
 const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`;
 // 🔥 ADDED WISHLIST URLS
