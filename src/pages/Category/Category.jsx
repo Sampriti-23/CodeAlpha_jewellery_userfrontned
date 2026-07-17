@@ -7,7 +7,6 @@ import "./Category.css";
 const baseurl ="https://codealpha-jewellery-backend.onrender.com";
 const GET_ALL_PRODUCTS_URL = `${baseurl}/api/products/getallproducts`;
 const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`;
-// 🔥 ADDED WISHLIST URLS
 const GET_WISHLIST_URL = `${baseurl}/api/wishlist/getwishlist`;
 const TOGGLE_WISHLIST_URL = `${baseurl}/api/wishlist/toggle`;
 
@@ -16,7 +15,6 @@ const CategoryPage = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // 🔥 Start empty, we will fill this from the database!
   const [wishlistItems, setWishlistItems] = useState([]);
 
   useEffect(() => {
@@ -46,7 +44,6 @@ const CategoryPage = () => {
           
           if (wishRes.ok) {
             const wishData = await wishRes.json();
-            // The backend sends whole products, we just need their IDs for the heart check!
             if (wishData.products) {
               const savedIds = wishData.products.map(p => p._id);
               setWishlistItems(savedIds);
@@ -104,7 +101,6 @@ const CategoryPage = () => {
     }
   };
 
-  // 🔥 Database-Powered Wishlist Toggle
   const toggleWishlist = async (productId) => {
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
     const token = sessionStorage.getItem("token") || localStorage.getItem("token");
@@ -120,14 +116,12 @@ const CategoryPage = () => {
       return;
     }
 
-    // 1. Optimistic UI update (makes the heart feel instantly responsive)
     if (wishlistItems.includes(productId)) {
       setWishlistItems(wishlistItems.filter(id => id !== productId));
     } else {
       setWishlistItems([...wishlistItems, productId]);
     }
 
-    // 2. Tell the database!
     try {
       await fetch(TOGGLE_WISHLIST_URL, {
         method: "POST",
@@ -146,7 +140,6 @@ const CategoryPage = () => {
     return <div className="category-page-loading"><h2>Loading {categoryName}s...</h2></div>;
   }
 
-  // Add this inside your Cart component
   const getDisplayImage = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/80";
     return imagePath.startsWith('http') 
@@ -168,7 +161,13 @@ const CategoryPage = () => {
             products.map((product) => (
               <div className="product-card" key={product._id}>
                 
-                <div className="product-image-wrapper">
+                <div className="product-image-wrapper" style={{ position: "relative" }}>
+                  {/* 🔥 Sale Badge */}
+                  {product.salePrice && product.salePrice > 0 && (
+                    <span style={{ position: "absolute", top: "10px", left: "10px", background: "#d9534f", color: "white", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold", zIndex: 2 }}>
+                      SALE
+                    </span>
+                  )}
                   <img 
                     src={getDisplayImage(product.image)} 
                     alt={product.name} 
@@ -181,7 +180,18 @@ const CategoryPage = () => {
                   <p className="product-desc">
                     {product.description ? product.description.slice(0, 50) + "..." : "Elegant piece for everyday wear."}
                   </p>
-                  <p className="product-price">₹{product.price.toLocaleString()}</p>
+                  
+                  {/* 🔥 Sale Price Logic */}
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', margin: '10px 0' }}>
+                    {product.salePrice && product.salePrice > 0 ? (
+                      <>
+                        <p className="product-price" style={{ color: "#d9534f", margin: 0, fontWeight: "bold" }}>₹{product.salePrice.toLocaleString()}</p>
+                        <p className="product-price" style={{ textDecoration: "line-through", color: "#888", fontSize: "14px", margin: 0 }}>₹{product.price.toLocaleString()}</p>
+                      </>
+                    ) : (
+                      <p className="product-price" style={{ margin: 0 }}>₹{product.price.toLocaleString()}</p>
+                    )}
+                  </div>
                   
                   <div className="button-group">
                     <button 

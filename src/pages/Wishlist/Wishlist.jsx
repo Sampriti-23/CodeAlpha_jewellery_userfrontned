@@ -3,17 +3,15 @@ import { FaTrash, FaShoppingCart } from "react-icons/fa";
 import Navbar from "../../layout/navbar/Navbar";
 import "./Wishlist.css";
 
-// 🔥 USING YOUR NEW DATABASE URLS
 const baseurl="https://codealpha-jewellery-backend.onrender.com"
 const GET_WISHLIST_URL = `${baseurl}/api/wishlist/getwishlist`;
 const TOGGLE_WISHLIST_URL = `${baseurl}/api/wishlist/toggle`;
-const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`; // Matched to your CategoryPage route!
+const ADD_TO_CART_URL = `${baseurl}/api/cart/newcart`; 
 
 const Wishlist = () => {
   const [wishlistProducts, setWishlistProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Helper to grab secure user data
   const getUserData = () => {
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
     const token = sessionStorage.getItem("token") || localStorage.getItem("token");
@@ -39,7 +37,6 @@ const Wishlist = () => {
       
       if (response.ok) {
         const data = await response.json();
-        // The backend populates the 'products' array for us!
         setWishlistProducts(data.products || []);
       }
     } catch (error) {
@@ -57,7 +54,6 @@ const Wishlist = () => {
     const { userId, token } = getUserData();
     if (!userId) return;
 
-    // Remove instantly from UI for snappy feel
     setWishlistProducts(wishlistProducts.filter(p => p._id !== productId));
 
     try {
@@ -83,7 +79,7 @@ const Wishlist = () => {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // 🔥 Added missing Token!
+          "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify({ userId, productId, qty: 1 })
       });
@@ -98,7 +94,6 @@ const Wishlist = () => {
     }
   };
 
-  // Add this inside your Cart component
   const getDisplayImage = (imagePath) => {
     if (!imagePath) return "https://via.placeholder.com/80";
     return imagePath.startsWith('http') 
@@ -124,11 +119,32 @@ const Wishlist = () => {
           <div className="wishlist-grid">
             {wishlistProducts.map(product => (
               <div className="wishlist-card" key={product._id}>
-                <img src={getDisplayImage(product.image)} alt={product.name} />
+                
+                <div style={{ position: "relative" }}>
+                  {/* 🔥 Sale Badge for Wishlist Images */}
+                  {product.salePrice && product.salePrice > 0 && (
+                    <span style={{ position: "absolute", top: "10px", left: "10px", background: "#d9534f", color: "white", padding: "4px 8px", borderRadius: "4px", fontSize: "12px", fontWeight: "bold" }}>
+                      SALE
+                    </span>
+                  )}
+                  <img src={getDisplayImage(product.image)} alt={product.name} />
+                </div>
                 
                 <div className="wishlist-info">
                   <h4>{product.name}</h4>
-                    <p className="price">₹{product.price.toLocaleString()}</p>
+                  
+                  {/* 🔥 Sale Price Logic for Wishlist */}
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    {product.salePrice && product.salePrice > 0 ? (
+                      <>
+                        <p className="price" style={{ color: "#d9534f", margin: 0, fontWeight: "bold" }}>₹{product.salePrice.toLocaleString()}</p>
+                        <p className="price" style={{ textDecoration: "line-through", color: "#888", fontSize: "14px", margin: 0 }}>₹{product.price.toLocaleString()}</p>
+                      </>
+                    ) : (
+                      <p className="price" style={{ margin: 0 }}>₹{product.price.toLocaleString()}</p>
+                    )}
+                  </div>
+
                 </div>
                 
                 <div className="wishlist-actions">

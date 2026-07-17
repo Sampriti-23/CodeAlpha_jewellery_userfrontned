@@ -12,8 +12,6 @@ const Cart = () => {
   const [cart, setCart] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Checkout Modal States
-
   const [showCheckout, setShowCheckout] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
@@ -25,22 +23,17 @@ const Cart = () => {
   });
 
   const navigate = useNavigate();
-const userString =
-  sessionStorage.getItem("user") ||
-  localStorage.getItem("user");
+  const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
 
-let user = null;
+  let user = null;
+  if (userString && userString !== "undefined") {
+    user = JSON.parse(userString);
+  }
 
-if (userString && userString !== "undefined") {
-  user = JSON.parse(userString);
-}
+  const userId = user?._id || user?.id;
+  const userName = user?.name || "Guest";
 
-const userId = user?._id || user?.id;
-
-const userName = user?.name || "Guest";
-
- const fetchCart = async () => {
-    // 1. Grab BOTH the user ID and the security token
+  const fetchCart = async () => {
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
     const token = sessionStorage.getItem("token") || localStorage.getItem("token");
     
@@ -56,23 +49,17 @@ const userName = user?.name || "Guest";
     }
 
     try {
-      // 2. Fetch the cart WITH the Authorization Token! 🔥
       const response = await fetch(`${GET_CART_URL}/${currentUserId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // Show the backend our ID card
+          "Authorization": `Bearer ${token}` 
         }
       });
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Cart Data received:", data); // 🛑 FOR DEBUGGING
-        
-        // Sometimes backends wrap the response in a "data" object. 
-        // This safely checks for both formats!
         const cartData = data.data ? data.data : data;
-        
         setCart(cartData);
       } else {
         console.error("Backend refused to send cart. Status:", response.status);
@@ -84,59 +71,41 @@ const userName = user?.name || "Guest";
     }
   };
 
-useEffect(() => {
-
-  if (userId) {
-
-    fetchCart();
-
-    fetchRecommendations();
-
-  } else {
-
-    setIsLoading(false);
-
-  }
-
-}, [userId]);
-
-const fetchRecommendations = async () => {
-
-  if (!userId) {
-    console.log("❌ USER ID NOT FOUND");
-    return;
-  }
-
-  try {
-
-    console.log("🔥 FETCHING RECOMMENDATIONS FOR:", userId);
-
-    const response = await fetch(
-      `${baseurl}/api/recommendations/${userId}`
-    );
-
-    const data = await response.json();
-
-    console.log("🎯 RECOMMENDATION DATA:", data);
-
-    if (data.success) {
-      setRecommendedProducts(data.recommendations || []);
+  useEffect(() => {
+    if (userId) {
+      fetchCart();
+      fetchRecommendations();
+    } else {
+      setIsLoading(false);
     }
+  }, [userId]);
 
-  } catch (error) {
+  const fetchRecommendations = async () => {
+    if (!userId) return;
+    try {
+      const response = await fetch(`${baseurl}/api/recommendations/${userId}`);
+      const data = await response.json();
+      if (data.success) {
+        setRecommendedProducts(data.recommendations || []);
+      }
+    } catch (error) {
+      console.log("❌ RECOMMEND ERROR:", error);
+    }
+  };
 
-    console.log("❌ RECOMMEND ERROR:", error);
-
-  }
-
-};
-const calculateTotal = () => {
+  // 🔥 CRITICAL FIX: Calculate total using Sale Price if available!
+  const calculateTotal = () => {
     if (!cart || !cart.cartItems) return 0;
     
     return cart.cartItems.reduce((total, item) => {
       if (item.product && item.product.price) {
-        // 🔥 FIX: Clean the price (removes commas) and force it to be a Number
-        const cleanPrice = Number(item.product.price.toString().replace(/,/g, ''));
+        
+        // Use salePrice if it exists, otherwise use regular price
+        const activePrice = item.product.salePrice && item.product.salePrice > 0 
+          ? item.product.salePrice 
+          : item.product.price;
+
+        const cleanPrice = Number(activePrice.toString().replace(/,/g, ''));
         const cleanQty = Number(item.qty);
         
         return total + (cleanPrice * cleanQty);
@@ -145,11 +114,8 @@ const calculateTotal = () => {
     }, 0);
   };
 
-  // 🔥 NEW: Handle Increase / Decrease Quantity
   const handleUpdateQuantity = async (productId, currentQty, change) => {
     const newQty = currentQty + change;
-    
-    // Don't let the quantity go below 1 (Use the trash button for deleting!)
     if (newQty < 1) return; 
 
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
@@ -162,24 +128,17 @@ const calculateTotal = () => {
     }
 
     try {
-      // Call your backend updatecart route!
       const response = await fetch(`${UPDATE_CART_URL}/${currentUserId}`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}` 
         },
-        body: JSON.stringify({ 
-          userId: currentUserId, 
-          productId: productId, 
-          qty: newQty 
-        })
+        body: JSON.stringify({ userId: currentUserId, productId: productId, qty: newQty })
       });
 
       if (response.ok) {
-        fetchCart(); // Instantly reload the cart to update the Total ₹ Price!
-      } else {
-        console.error("Failed to update quantity");
+        fetchCart(); 
       }
     } catch (error) {
       console.error("Update error:", error);
@@ -191,44 +150,23 @@ const calculateTotal = () => {
   };
 
   const handleRemoveItem = async (productId) => {
-
-  try {
-
-    const token =
-      sessionStorage.getItem("token") ||
-      localStorage.getItem("token");
-
-    const response = await fetch(
-      `${baseurl}/api/cart/deletecarts/${userId}/${productId}`,
-      {
+    try {
+      const token = sessionStorage.getItem("token") || localStorage.getItem("token");
+      const response = await fetch(`${baseurl}/api/cart/deletecarts/${userId}/${productId}`, {
         method: "DELETE",
-
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("DELETE RESPONSE => ", data);
-
-    if (response.ok) {
-      fetchCart();
+      });
+      if (response.ok) fetchCart();
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-  } catch (error) {
-
-    console.log(error);
-
-  }
-};
-  // Submit the Order to the Backend
   const handleConfirmOrder = async (e) => {
     e.preventDefault();
-    
-    // 1. Grab User Data & Token securely
     const userString = sessionStorage.getItem("user") || localStorage.getItem("user");
     const token = sessionStorage.getItem("token") || localStorage.getItem("token");
     
@@ -242,52 +180,43 @@ const calculateTotal = () => {
     }
 
     try {
-      // 2. Send request WITH the Authorization Token
       const response = await fetch(PLACE_ORDER_URL, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}` // 🔥 FIX: Your backend needs to see this!
+          "Authorization": `Bearer ${token}` 
         },
         body: JSON.stringify({
           userId: currentUserId,
           clientName: userName,
           shippingAddress: shippingData,
-          // NOTE: Depending on your backend, you might also need to send the cartItems or totalAmount here!
         })
       });
 
       if (response.ok) {
         setShowCheckout(false);
         setShowSuccess(true);
-        setCart(null); // Clear cart visually
+        setCart(null); 
       } else {
-        // 🔥 FIX: If the backend rejects the order, tell us EXACTLY why
         const errorData = await response.json();
         alert(`Order Failed: ${errorData.message || "Route not found. Check PLACE_ORDER_URL!"}`);
       }
     } catch (error) {
-      console.error("Order error:", error);
       alert("Network error. Check console for details.");
     }
+  };
+
+  const getDisplayImage = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/80";
+    return imagePath.startsWith('http') ? imagePath : `${baseurl}${imagePath}`;
   };
 
   if (isLoading) return <div className="cart-page"><h2>Loading Cart...</h2></div>;
 
   const totalItems = cart?.cartItems?.length || 0;
   const subTotal = calculateTotal();
-  const deliveryCost = subTotal > 0 ? 50 : 0; // Flat ₹50 delivery fee (example)
+  const deliveryCost = subTotal > 0 ? 50 : 0; 
   const grandTotal = subTotal + deliveryCost;
-
-
-  // Add this inside your Cart component
-  const getDisplayImage = (imagePath) => {
-    if (!imagePath) return "https://via.placeholder.com/80";
-    return imagePath.startsWith('http') 
-      ? imagePath 
-      : `${baseurl}${imagePath}`;
-  };
-
 
   return (
     <div className="cart-page">
@@ -303,10 +232,15 @@ const calculateTotal = () => {
         </div>
       ) : (
         <div className="cart-container-flex">
-          {/* LEFT: CART ITEMS */}
           <div className="cart-items-section">
             {cart?.cartItems?.map((item) => {
               if (!item.product) return null;
+
+              // 🔥 Determine the active price for this single item
+              const activePrice = item.product.salePrice && item.product.salePrice > 0 
+                ? item.product.salePrice 
+                : item.product.price;
+
               return (
                 <div className="cart-item-row" key={item.product._id}>
                   <div className="item-image-box">
@@ -316,79 +250,57 @@ const calculateTotal = () => {
                   <div className="item-details">
                     <h4>{item.product.name}</h4>
                     <p className="item-cat">Category: {item.product.category}</p>
-                    <p className="item-price-per">₹{item.product.price} / per item</p>
+                    
+                    {/* 🔥 UI for Sale Price */}
+                    {item.product.salePrice && item.product.salePrice > 0 ? (
+                      <p className="item-price-per">
+                        <span style={{ color: "#d9534f", fontWeight: "bold" }}>₹{item.product.salePrice}</span> 
+                        <span style={{ textDecoration: "line-through", color: "#888", fontSize: "12px", marginLeft: "6px" }}>₹{item.product.price}</span> / per item
+                      </p>
+                    ) : (
+                      <p className="item-price-per">₹{item.product.price} / per item</p>
+                    )}
                   </div>
 
                   <div className="item-actions-right">
-                    <h4 className="total-item-price">₹{item.product.price * item.qty}</h4>
+                    {/* 🔥 Multiply activePrice by qty, NOT regular price */}
+                    <h4 className="total-item-price">₹{activePrice * item.qty}</h4>
                     <div className="controls">
                       <div className="qty-selector" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-  <button 
-    onClick={() => handleUpdateQuantity(item.product._id, item.qty, -1)}
-    style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}
-  >
-    -
-  </button>
-  
-  <span style={{ fontWeight: 'bold' }}>{item.qty}</span>
-  
-  <button 
-    onClick={() => handleUpdateQuantity(item.product._id, item.qty, 1)}
-    style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}
-  >
-    +
-  </button>
-</div>
- 
- <button
-  className="icon-btn delete-btn"
-  onClick={() =>
-    handleRemoveItem(item.product._id)
-  }
->
-  <FaTrash />
-</button>
+                        <button 
+                          onClick={() => handleUpdateQuantity(item.product._id, item.qty, -1)}
+                          style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}>-</button>
+                        <span style={{ fontWeight: 'bold' }}>{item.qty}</span>
+                        <button 
+                          onClick={() => handleUpdateQuantity(item.product._id, item.qty, 1)}
+                          style={{ border: 'none', background: '#eee', padding: '4px 10px', cursor: 'pointer', borderRadius: '4px', fontSize: '16px' }}>+</button>
+                      </div>
+                      <button className="icon-btn delete-btn" onClick={() => handleRemoveItem(item.product._id)}>
+                        <FaTrash />
+                      </button>
                     </div>
                   </div>
                 </div>
               );
             })}
 
-            {/* RECOMMENDATIONS */}
-
-<div className="recommend-section">
-
-  <h2>Recommended For You</h2>
-
-  <div className="recommend-grid">
-
-    {recommendedProducts.map((item) => (
-
-      <div className="recommend-card" key={item._id}>
-
-       <img src={getDisplayImage(item.image)} alt={item.name} />
-
-        <h4>{item.name}</h4>
-
-        <p>{item.category}</p>
-
-        <h3>₹{item.price}</h3>
-
-        <button className="recommend-btn">
-          Add To Cart
-        </button>
-
-      </div>
-
-    ))}
-
-  </div>
-
-</div>
-
+            <div className="recommend-section">
+              <h2>Recommended For You</h2>
+              <div className="recommend-grid">
+                {recommendedProducts.map((item) => (
+                  <div className="recommend-card" key={item._id}>
+                   <img src={getDisplayImage(item.image)} alt={item.name} />
+                    <h4>{item.name}</h4>
+                    <p>{item.category}</p>
+                    {/* Simplified recommendation price to keep code short */}
+                    <h3>₹{item.salePrice && item.salePrice > 0 ? item.salePrice : item.price}</h3>
+                    <button className="recommend-btn">Add To Cart</button>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* RIGHT: SUMMARY */}
           <div className="cart-summary-section">
             <div className="promo-code">
               <input type="text" placeholder="Promocode" />
@@ -415,7 +327,6 @@ const calculateTotal = () => {
         </div>
       )}
 
-      {/* 🟢 CHECKOUT MODAL */}
       {showCheckout && (
         <div className="modal-overlay">
           <div className="checkout-modal">
@@ -435,7 +346,6 @@ const calculateTotal = () => {
         </div>
       )}
 
-      {/* 🟢 SUCCESS POPUP */}
       {showSuccess && (
         <div className="modal-overlay">
           <div className="success-modal">
