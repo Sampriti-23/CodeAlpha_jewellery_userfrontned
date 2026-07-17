@@ -146,6 +146,14 @@ const CategoryPage = () => {
     return <div className="category-page-loading"><h2>Loading {categoryName}s...</h2></div>;
   }
 
+  // Add this inside your Cart component
+  const getDisplayImage = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/80";
+    return imagePath.startsWith('http') 
+      ? imagePath 
+      : `${baseurl}${imagePath}`;
+  };
+
   return (
     <>
     <div className="category-page">
@@ -162,7 +170,7 @@ const CategoryPage = () => {
                 
                 <div className="product-image-wrapper">
                   <img 
-                    src={`${baseurl}${product.image}` || "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=500&auto=format&fit=crop"} 
+                    src={getDisplayImage(product.image)} 
                     alt={product.name} 
                     className="product-image"
                   />

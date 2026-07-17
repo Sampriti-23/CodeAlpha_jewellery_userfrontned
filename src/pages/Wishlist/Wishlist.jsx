@@ -98,6 +98,14 @@ const Wishlist = () => {
     }
   };
 
+  // Add this inside your Cart component
+  const getDisplayImage = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/80";
+    return imagePath.startsWith('http') 
+      ? imagePath 
+      : `${baseurl}${imagePath}`;
+  };
+
   return (
     <>
       <Navbar />
@@ -116,11 +124,11 @@ const Wishlist = () => {
           <div className="wishlist-grid">
             {wishlistProducts.map(product => (
               <div className="wishlist-card" key={product._id}>
-                <img src={product.image || "https://via.placeholder.com/200"} alt={product.name} />
+                <img src={getDisplayImage(product.image)} alt={product.name} />
                 
                 <div className="wishlist-info">
                   <h4>{product.name}</h4>
-<p className="price">₹{product.price.toLocaleString()}</p>
+                    <p className="price">₹{product.price.toLocaleString()}</p>
                 </div>
                 
                 <div className="wishlist-actions">

@@ -38,12 +38,6 @@ if (userString && userString !== "undefined") {
 const userId = user?._id || user?.id;
 
 const userName = user?.name || "Guest";
- 
-
-useEffect(() => {
-  fetchCart();
-  fetchRecommendations();
-}, [userId]);
 
  const fetchCart = async () => {
     // 1. Grab BOTH the user ID and the security token
@@ -285,6 +279,16 @@ const calculateTotal = () => {
   const deliveryCost = subTotal > 0 ? 50 : 0; // Flat ₹50 delivery fee (example)
   const grandTotal = subTotal + deliveryCost;
 
+
+  // Add this inside your Cart component
+  const getDisplayImage = (imagePath) => {
+    if (!imagePath) return "https://via.placeholder.com/80";
+    return imagePath.startsWith('http') 
+      ? imagePath 
+      : `${baseurl}${imagePath}`;
+  };
+
+
   return (
     <div className="cart-page">
       <div className="cart-header">
@@ -306,7 +310,7 @@ const calculateTotal = () => {
               return (
                 <div className="cart-item-row" key={item.product._id}>
                   <div className="item-image-box">
-                    <img src={item.product.image || "https://via.placeholder.com/80"} alt={item.product.name} />
+                   <img src={getDisplayImage(item.product.image)} alt={item.product.name} />
                   </div>
                   
                   <div className="item-details">
@@ -362,10 +366,7 @@ const calculateTotal = () => {
 
       <div className="recommend-card" key={item._id}>
 
-        <img
-          src={item.image}
-          alt={item.name}
-        />
+       <img src={getDisplayImage(item.image)} alt={item.name} />
 
         <h4>{item.name}</h4>
 
