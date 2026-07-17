@@ -1,0 +1,204 @@
+.onsale-page {
+  min-height: 100vh;
+  background-color: #fcfcfc;
+  padding-bottom: 50px;
+}
+
+.onsale-loading {
+  text-align: center;
+  padding: 100px 20px;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+.onsale-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.onsale-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.onsale-header h2 {
+  font-size: 2.5rem;
+  color: #d9534f; /* A bold red for sales */
+  margin-bottom: 10px;
+}
+
+.onsale-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* --- Grid Layout --- */
+.onsale-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+/* --- Card Styling --- */
+.onsale-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.onsale-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Image & Badge --- */
+.onsale-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.onsale-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #d9534f;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  z-index: 2;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 5px rgba(217, 83, 79, 0.4);
+}
+
+/* --- Product Info --- */
+.onsale-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.onsale-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 5px 0;
+}
+
+.onsale-cat {
+  font-size: 0.85rem;
+  color: #888;
+  text-transform: uppercase;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.5px;
+}
+
+/* --- Pricing Logic --- */
+.onsale-pricing {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-top: auto; /* Pushes pricing to the bottom if names are short */
+}
+
+.active-price {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #d9534f;
+  margin: 0;
+}
+
+.old-price {
+  font-size: 1rem;
+  color: #999;
+  text-decoration: line-through;
+  margin: 0;
+}
+
+/* --- Buttons --- */
+.onsale-button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.onsale-add-cart {
+  flex-grow: 1;
+  background-color: #111;
+  color: white;
+  border: none;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.onsale-add-cart:hover {
+  background-color: #d9534f; /* Turns red on hover to match sale theme */
+}
+
+.onsale-wishlist {
+  background: #f1f1f1;
+  border: none;
+  width: 45px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+}
+
+.onsale-wishlist:hover {
+  background: #e1e1e1;
+}
+
+.heart-filled {
+  color: #d9534f;
+}
+
+.heart-outline {
+  color: #555;
+}
+
+/* --- Empty State --- */
+.no-sale-products {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.no-sale-products h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.no-sale-products p {
+  color: #777;
+}

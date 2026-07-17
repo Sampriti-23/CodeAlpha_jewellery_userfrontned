@@ -73,7 +73,7 @@ const Navbar = () => {
 
           <ul className="links">
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/on-sale">On Sale</Link></li>
+            <li><Link to="/sale">On Sale</Link></li>
 
             {/* COLLECTION DROPDOWN (Using your exact dropdown structure) */}
             <li

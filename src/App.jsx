@@ -7,6 +7,7 @@ import CategoryPage from "./pages/Category/Category.jsx";
 import Cart from "./pages/Cart/Cart.jsx";
 import Wishlist from "./pages/Wishlist/Wishlist.jsx";
 import MyOrders from "./pages/Myorders/Myorders.jsx";
+import Sale from "./pages/Sale/Sale.jsx";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/register" element={<RegisterModal />} />
         <Route path="/category/:categoryName" element={<CategoryPage />} />
         <Route path="/cart" element={<Cart />} /> 
+        <Route path="/sale" element={<Sale />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/myorders" element={<MyOrders/>} />
       </Routes>
