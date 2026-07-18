@@ -44,6 +44,9 @@ const Footer = () => {
           <h3>SUPPORT</h3>
           <ul>
             <li>Contact Us</li>
+            <li>91+ 1234567890</li> 
+            <li>trinkets@gmail.com</li>
+            <li>Delhi</li>
           </ul>
         </div>
 

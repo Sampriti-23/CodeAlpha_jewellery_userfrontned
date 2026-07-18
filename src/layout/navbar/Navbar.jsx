@@ -9,8 +9,7 @@ const Navbar = () => {
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
- 
-  const [showCollection, setShowCollection] = useState(false); // Added for Collection
+  const [showCollection, setShowCollection] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const sidebarRef = useRef();
@@ -20,10 +19,9 @@ const Navbar = () => {
   const token = sessionStorage.getItem("token");
   const user = JSON.parse(sessionStorage.getItem("user"));
 
-
   const categories = ["Ring", "Necklace", "Earrings", "Bracelet", "Pendant"];
 
-  /* CLOSE SIDEBAR */
+  /* CLOSE SIDEBAR ON OUTSIDE CLICK */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
@@ -34,7 +32,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* CLOSE USER DROPDOWN */
+  /* CLOSE USER DROPDOWN ON OUTSIDE CLICK */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userRef.current && !userRef.current.contains(e.target)) {
@@ -48,73 +46,61 @@ const Navbar = () => {
   const handleLogout = () => {
     sessionStorage.clear();
     setSidebarOpen(false);
-    navigate('/'); 
+    navigate('/');
     window.location.reload();
   };
 
   return (
     <>
       <nav className="navbar">
-
         {/* LEFT */}
         <div className="left">
-
-          {token && (
-            <div className="hamburger" onClick={() => setSidebarOpen(true)}>
-              ☰
-            </div>
-          )}
-
-          <div className="logo">
-           
-              <span>Trinkets</span>
-            
+          <div className={`hamburger ${token ? 'logged-in' : 'logged-out'}`} onClick={() => setSidebarOpen(true)}>
+            ☰
           </div>
 
-          <ul className="links">
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/sale">On Sale</Link></li>
-
-            {/* COLLECTION DROPDOWN (Using your exact dropdown structure) */}
-            <li
-              className="brands" 
-              onMouseEnter={() => setShowCollection(true)}
-              onMouseLeave={() => setShowCollection(false)}
-            >
-              Collection
-              {showCollection && (
-                <div className="dropdown">
-                  {categories.map((cat, index) => (
-                    <Link key={index} to={`/category/${cat}`}>
-                      <p>{cat}</p>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </li>
-
-           
-          </ul>
+          <div className="logo">
+            <span>Trinkets</span>
+          </div>
         </div>
+
+        {/* CENTERED DESKTOP LINKS */}
+        <ul className="links">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/sale">On Sale</Link></li>
+
+          <li
+            className="brands"
+            onMouseEnter={() => setShowCollection(true)}
+            onMouseLeave={() => setShowCollection(false)}
+          >
+            Collection
+            {showCollection && (
+              <div className="dropdown">
+                {categories.map((cat, index) => (
+                  <Link key={index} to={`/category/${cat}`}>
+                    <p>{cat}</p>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </li>
+        </ul>
 
         {/* RIGHT */}
         <div className="right">
           {!token ? (
-            <>
+            <div className="auth-buttons">
               <button className="login" onClick={() => setOpenLoginModal(true)}>
                 Login
               </button>
               <button className="register" onClick={() => setOpenRegisterModal(true)}>
                 Register
               </button>
-            </>
+            </div>
           ) : (
             <div className="user-actions">
-
-              {/* CART ICON */}
               <Link to="/cart" className="cart-icon">🛒</Link>
-
-              {/* USER MENU */}
               <div className="user-menu" ref={userRef}>
                 <div
                   className="user-icon"
@@ -123,24 +109,44 @@ const Navbar = () => {
                   {user?.name?.charAt(0).toUpperCase()}
                 </div>
               </div>
-
             </div>
           )}
         </div>
-
       </nav>
-            <div className="sidebar">
-          {/* SIDEBAR */}
+
+      {/* SIDEBAR */}
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef}>
         <div className="close" onClick={() => setSidebarOpen(false)}>✕</div>
         <ul>
-          <li className="profile"><Link to="/myorders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
-          <li  className="profile"><Link to="/wishlist" onClick={() => setSidebarOpen(false)}>Your Wishlist</Link></li>
-          <li className="profile"><Link to="/profile" onClick={() => setSidebarOpen(false)}>Your Profile</Link></li>
-          <li onClick={handleLogout} className="logout">Logout</li>
+          {/* MOBILE ONLY NAVIGATION LINKS (Hidden on Desktop) */}
+          <div className="mobile-nav-links">
+            <li><Link to="/" onClick={() => setSidebarOpen(false)}>Home</Link></li>
+            <li><Link to="/sale" onClick={() => setSidebarOpen(false)}>On Sale</Link></li>
+            <li className="mobile-category-title">Collection</li>
+            <ul className="mobile-category-list">
+              {categories.map((cat, index) => (
+                <li key={index}>
+                  <Link to={`/category/${cat}`} onClick={() => setSidebarOpen(false)}>- {cat}</Link>
+                </li>
+              ))}
+            </ul>
+            <hr className="sidebar-divider" />
+          </div>
+
+          {/* USER PROFILE LINKS */}
+          {token ? (
+            <>
+              <li className="profile"><Link to="/myorders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
+              <li className="profile"><Link to="/wishlist" onClick={() => setSidebarOpen(false)}>Your Wishlist</Link></li>
+              <li className="profile"><Link to="/profile" onClick={() => setSidebarOpen(false)}>Your Profile</Link></li>
+              <li onClick={handleLogout} className="logout">Logout</li>
+            </>
+          ) : (
+             <li className="profile" onClick={() => { setSidebarOpen(false); setOpenLoginModal(true); }}>Login to view profile</li>
+          )}
         </ul>
       </div>
-          </div>
+
       {/* LOGIN MODAL */}
       {openLoginModal && (
         <Login
