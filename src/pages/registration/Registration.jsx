@@ -4,9 +4,7 @@ import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { registerUser } from "../../reducer/AuthSlice";
 
-
 const RegisterModal = ({ closeModal, openLoginModal }) => {
-
   const dispatch = useDispatch();
 
   const {
@@ -21,7 +19,6 @@ const RegisterModal = ({ closeModal, openLoginModal }) => {
       console.log("REGISTER RESPONSE:", res);
 
       if (res?.payload?.status_code === 201) {
-
         const user = res.payload.user || res.payload.data?.user;
 
         if (user) {
@@ -30,7 +27,7 @@ const RegisterModal = ({ closeModal, openLoginModal }) => {
 
         // ✅ Switch to login modal
         closeModal();
-        openLogin();
+        openLoginModal(); // Fixed: was previously "openLogin()"
 
       } else {
         alert("Registration failed ");
@@ -41,7 +38,6 @@ const RegisterModal = ({ closeModal, openLoginModal }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-register">
-
         {/* Close Button */}
         <span className="close-btn" onClick={closeModal}>×</span>
 
@@ -49,7 +45,6 @@ const RegisterModal = ({ closeModal, openLoginModal }) => {
 
         {/* Form */}
         <form className="modal-form" onSubmit={handleSubmit(onSubmit)}>
-
           <input
             type="text"
             placeholder="Full Name"
@@ -86,17 +81,18 @@ const RegisterModal = ({ closeModal, openLoginModal }) => {
             <p className="error">{errors.confirmPassword.message}</p>
           )}
 
-
           <button type="submit">Register</button>
         </form>
 
         <p className="login-link">
           Already have an account?
-          <button onClick={() => openLoginModal()}>
+          <button onClick={() => {
+            closeModal();
+            openLoginModal();
+          }}>
             <u>Login</u>
           </button>
         </p>
-
       </div>
     </div>
   );

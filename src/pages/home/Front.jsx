@@ -53,7 +53,7 @@ const Front = () => {
             Jewellery that tells <br /> your story
           </h1>
 
-          <p className="hero-link" style={{cursor: "pointer"}} onClick={() => navigate('/on-sale')}>
+          <p className="hero-link" style={{cursor: "pointer"}} onClick={() => navigate('/sale')}>
             Explore Featured Jewellery <span>→</span>
           </p>
         </div>
@@ -95,8 +95,8 @@ const Front = () => {
         <div className="feature">
           <div className="icon">📦</div>
           <div>
-            <h3>Easy Return</h3>
-            <p>& Exchange</p>
+            <h3>Quality Packaging</h3>
+            <p>& Eco-Friendly</p>
           </div>
         </div>
 

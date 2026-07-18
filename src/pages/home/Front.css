@@ -1,9 +1,13 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family: Arial, Helvetica, sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ========================================= */
+/* HERO / OVERLAY SECTION                    */
+/* ========================================= */
 .overlay {
   height: 100vh;
   width: 100%;
@@ -11,7 +15,8 @@ font-family: Arial, Helvetica, sans-serif;
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(to right, #f3c7cd, #e7b6bd);
-  padding: 0 80px;
+  /* Padding top: 0, right: 0, bottom: 0, left: 80px to push image flush right */
+  padding: 0 0 0 80px; 
   overflow: hidden;
 }
 
@@ -19,6 +24,7 @@ font-family: Arial, Helvetica, sans-serif;
 .hero-text {
   flex: 1;
   max-width: 50%;
+  padding-right: 40px; /* Breathing room between text and image */
 }
 
 .hero-text h1 {
@@ -47,43 +53,26 @@ font-family: Arial, Helvetica, sans-serif;
 /* RIGHT IMAGE */
 .hero-image {
   flex: 1;
-  display: cover;
-  margin-left: 190px;
-  margin-top: -75px;
+  height: 100vh; /* Forces container to stretch full height */
+  display: flex;
+  margin: 0; /* Reset margins */
 }
 
 .hero-image img {
-  height: 96vh;
+  width: 100%;
+  height: 100%; /* Stretches exactly to the container's 100vh */
   object-fit: cover;
+  object-position: center; 
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 40px 20px;
-  }
 
-  .hero-text {
-    max-width: 100%;
-  }
-
-  .hero-text h1 {
-    font-size: 40px;
-  }
-
-  .hero-image img {
-    height: 60vh;
-    margin-top: 20px;
-  }
-}
-/* COLLECTION SECTION */
+/* ========================================= */
+/* COLLECTION SECTION                        */
+/* ========================================= */
 .collection-section {
   background: #efe6dc;
-  padding: 60px 5%;
+  padding: 80px 5%;
   text-align: center;
-  height: 70vh;
 }
 
 /* TITLE */
@@ -99,7 +88,7 @@ font-family: Arial, Helvetica, sans-serif;
   display: flex;
   justify-content: center;
   gap: 25px;
-  flex-wrap: wrap;
+  flex-wrap: wrap; 
 }
 
 /* CARD */
@@ -118,88 +107,26 @@ font-family: Arial, Helvetica, sans-serif;
 
 .collection-card p {
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
-/* HOVER */
 .collection-card:hover {
   transform: translateY(-5px);
 }
-/* FAQ SECTION */
-.faq-section {
-  background: #efe6dc;
-  padding: 80px 5%;
-}
 
-/* CONTAINER */
-.faq-container {
-  display: flex;
-  gap: 60px;
-  align-items: flex-start;
-}
 
-/* LEFT */
-.faq-left h2 {
-  font-size: 40px;
-  color: #8b1e3f;
-  font-family: "Playfair Display", serif;
-  line-height: 1.2;
-}
-
-/* RIGHT */
-.faq-right {
-  flex: 1;
-}
-
-/* ITEM */
-.faq-item {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  background: #ffe5ce;
-}
-
-/* QUESTION */
-.faq-question {
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/* ANSWER */
-.faq-answer {
-  padding: 15px;
-  font-size: 13px;
-  color: #555;
-  border-top: 1px solid #ddd;
-}
-
-/* ACTIVE */
-.faq-item.active {
-  border-color: #8b1e3f;
-}
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .faq-container {
-    flex-direction: column;
-  }
-
-  .faq-left h2 {
-    font-size: 28px;
-  }
-}
-/* FEATURES SECTION */
+/* ========================================= */
+/* FEATURES SECTION                          */
+/* ========================================= */
 .features-section {
   background: linear-gradient(to right, #fae1be, #d8c3a5);
-  padding: 40px 5%;
-  height: 30vh;
+  padding: 60px 5%; 
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  gap: 30px; 
 }
 
 /* EACH FEATURE */
@@ -215,11 +142,9 @@ font-family: Arial, Helvetica, sans-serif;
   height: 70px;
   border: 1px solid #333;
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 28px;
 }
 
@@ -234,10 +159,147 @@ font-family: Arial, Helvetica, sans-serif;
   font-style: italic;
 }
 
-/* RESPONSIVE */
+
+/* ========================================= */
+/* FAQ SECTION                               */
+/* ========================================= */
+.faq-section {
+  background: #efe6dc;
+  padding: 80px 5%;
+}
+
+/* CONTAINER */
+.faq-container {
+  display: flex;
+  gap: 100px;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* LEFT */
+.faq-left h2 {
+  font-size: 40px;
+  color: #8b1e3f;
+  font-family: "Playfair Display", serif;
+  line-height: 1.2;
+}
+
+/* RIGHT */
+.faq-right {
+  flex: 1;
+  width: 100%;
+}
+
+/* ITEM */
+.faq-item {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  background: #ffe5ce;
+  overflow: hidden; 
+}
+
+/* QUESTION */
+.faq-question {
+  padding: 18px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ANSWER */
+.faq-answer {
+  padding: 15px;
+  font-size: 14px;
+  color: #555;
+  border-top: 1px solid #ddd;
+  line-height: 1.5;
+}
+
+/* ACTIVE */
+.faq-item.active {
+  border-color: #8b1e3f;
+}
+
+
+/* ========================================= */
+/* RESPONSIVE MEDIA QUERIES                  */
+/* ========================================= */
+
+/* TABLET (Below 900px) */
 @media (max-width: 900px) {
+  .overlay {
+    flex-direction: column;
+    text-align: center;
+    /* Overrides the 0 padding on the right for mobile layout */
+    padding: 120px 20px 0; 
+    justify-content: flex-start;
+    gap: 40px;
+    height: auto; /* Lets content dictate height on mobile */
+  }
+
+  .hero-text {
+    max-width: 100%;
+    padding-right: 0;
+  }
+
+  .hero-text h1 {
+    font-size: 44px;
+  }
+
+  .hero-image {
+    width: 100%;
+    height: 50vh; /* Controlled height for tablet/mobile */
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   .features-section {
     flex-direction: column;
-    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .faq-container {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .faq-left h2 {
+    font-size: 32px;
+  }
+}
+
+/* MOBILE VIEW (Below 600px) */
+@media (max-width: 600px) {
+  .hero-text h1 {
+    font-size: 36px;
+  }
+
+  .collection-card {
+    /* Allow cards to take up almost the full width of mobile screens */
+    width: 100%; 
+    max-width: 300px; 
+  }
+
+  .faq-question {
+    font-size: 13px;
+    padding: 15px 12px;
+  }
+  
+  .faq-left h2 {
+    font-size: 28px;
+  }
+  
+  /* Hides the `<br />` tags so the title sits cleaner on small phones */
+  .faq-left h2 br {
+    display: none; 
   }
 }
