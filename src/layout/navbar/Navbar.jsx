@@ -116,6 +116,9 @@ const Navbar = () => {
                     <div className="user-info-card">
                       <p className="user-name">{user?.name || "User Name"}</p>
                       <p className="user-email">{user?.email || "No Email Provided"}</p>
+                      <button className="logout-button" onClick={handleLogout}>
+                        Logout
+                      </button>
                       </div>
                   </div>
                 )}
@@ -150,7 +153,6 @@ const Navbar = () => {
             <>
               <li className="profile"><Link to="/myorders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
               <li className="profile"><Link to="/wishlist" onClick={() => setSidebarOpen(false)}>Your Wishlist</Link></li>
-              <li onClick={handleLogout} className="logout">Logout</li>
             </>
           ) : (
              <li className="profile" onClick={() => { setSidebarOpen(false); setOpenLoginModal(true); }}>Login to view profile</li>

@@ -394,3 +394,20 @@
     right: 23px; /* Re-aligns arrow for mobile */
   }
 }
+.logout-button {
+  width: 100%;
+  margin-top: 8px;
+  padding: 7px;
+  background-color: white;
+  color: #8b1e3f;
+  border: 1px solid #8b1e3f;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.logout-button:hover {
+  background-color: #fcf4f5; /* Light pink/red tint on hover */
+}

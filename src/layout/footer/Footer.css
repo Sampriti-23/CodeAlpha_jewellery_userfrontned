@@ -73,7 +73,7 @@
   }
   
   .footer-left p {
-    font-size: 13px; 
+    font-size: 12px; 
   }
   
   .footer-section h3 {
@@ -107,4 +107,16 @@
 .footer-section {
   flex: 0 1 auto;
   min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .footer-container { /* Replace with your actual footer container class */
+    gap: 30px !important; /* Reduces the massive vertical space */
+    display: flex; 
+    flex-direction: column;
+  }
+
+  .footer-brand-section { /* Replace with the class for the "Trinkets" column */
+    margin-bottom: 10px !important; 
+  }
 }
