@@ -13,7 +13,7 @@ const Front = () => {
     { name: "Necklace", img: "https://images.unsplash.com/photo-1633934542430-0905ccb5f050" },
     { name: "Bracelet", img: "https://images.unsplash.com/photo-1721103428161-7d25616f670a" },
     { name: "Earrings", img: "https://images.unsplash.com/photo-1615854430736-c9fae5a95083" }, // 🔥 Fixed spelling to match ENUM
-    { name: "Pendant", img: "https://images.unsplash.com/photo-1620656798579-1984d9e87df7" },
+    { name: "Combo pack", img: "https://images.unsplash.com/photo-1620656798579-1984d9e87df7" },
   ];
 
   // FAQ DATA

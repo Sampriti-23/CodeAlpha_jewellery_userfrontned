@@ -19,7 +19,7 @@ const Navbar = () => {
   const token = sessionStorage.getItem("token");
   const user = JSON.parse(sessionStorage.getItem("user"));
 
-  const categories = ["Ring", "Necklace", "Earrings", "Bracelet", "Pendant"];
+  const categories = ["Ring", "Necklace", "Earrings", "Bracelet", "Combo pack"];
 
   /* CLOSE SIDEBAR ON OUTSIDE CLICK */
   useEffect(() => {
