@@ -101,6 +101,7 @@ const Navbar = () => {
           ) : (
             <div className="user-actions">
               <Link to="/cart" className="cart-icon">🛒</Link>
+              
               <div className="user-menu" ref={userRef}>
                 <div
                   className="user-icon"
@@ -108,7 +109,18 @@ const Navbar = () => {
                 >
                   {user?.name?.charAt(0).toUpperCase()}
                 </div>
+
+                {/* 🔥 NEW: USER DETAILS DROPDOWN */}
+                {showUserMenu && (
+                  <div className="user-details-dropdown">
+                    <div className="user-info-card">
+                      <p className="user-name">{user?.name || "User Name"}</p>
+                      <p className="user-email">{user?.email || "No Email Provided"}</p>
+                      </div>
+                  </div>
+                )}
               </div>
+
             </div>
           )}
         </div>
@@ -118,7 +130,7 @@ const Navbar = () => {
       <div className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef}>
         <div className="close" onClick={() => setSidebarOpen(false)}>✕</div>
         <ul>
-          {/* MOBILE ONLY NAVIGATION LINKS (Hidden on Desktop) */}
+          {/* MOBILE ONLY NAVIGATION LINKS */}
           <div className="mobile-nav-links">
             <li><Link to="/" onClick={() => setSidebarOpen(false)}>Home</Link></li>
             <li><Link to="/sale" onClick={() => setSidebarOpen(false)}>On Sale</Link></li>
@@ -138,7 +150,6 @@ const Navbar = () => {
             <>
               <li className="profile"><Link to="/myorders" onClick={() => setSidebarOpen(false)}>Your Orders</Link></li>
               <li className="profile"><Link to="/wishlist" onClick={() => setSidebarOpen(false)}>Your Wishlist</Link></li>
-              <li className="profile"><Link to="/profile" onClick={() => setSidebarOpen(false)}>Your Profile</Link></li>
               <li onClick={handleLogout} className="logout">Logout</li>
             </>
           ) : (

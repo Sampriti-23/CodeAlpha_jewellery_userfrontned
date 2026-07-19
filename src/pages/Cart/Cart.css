@@ -40,6 +40,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 .item-image-box img { max-width: 100%; max-height: 100%; border-radius: 8px; }
 
@@ -100,40 +101,41 @@
 
 /* MODALS */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.checkout-modal, .success-modal { background: white; padding: 30px; border-radius: 10px; width: 400px; position: relative; text-align: center; }
+.checkout-modal, .success-modal { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 400px; box-sizing: border-box; position: relative; text-align: center; }
 .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 18px; cursor: pointer; }
+
+/* Fixed Modal Spacing */
+.checkout-modal h2 { margin-bottom: 5px; }
+.checkout-modal p { margin-bottom: 25px; color: #555; }
+
 .checkout-modal input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
 .confirm-btn { width: 100%; padding: 12px; background: #7e2a40; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
 .success-modal h2 { color: #28a745; }
 .success-modal button { margin-top: 20px; padding: 10px 20px; background: #3b5998; color: white; border: none; border-radius: 6px; cursor: pointer; }
 
-/* RECOMMEND SECTION */
 
+/* RECOMMEND SECTION (MADE SMALLER) */
 .recommend-section {
   margin-top: 50px;
   width: 100%;
 }
 
 .recommend-section h2 {
-  font-size: 28px;
+  font-size: 24px;
   margin-bottom: 25px;
   color: #8b1e3f;
 }
 
-/* GRID */
-
 .recommend-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); /* Reduced from 220px */
+  gap: 20px;
 }
-
-/* CARD */
 
 .recommend-card {
   background: white;
   border-radius: 10px;
-  padding: 15px;
+  padding: 12px;
   transition: 0.3s;
   border: 1px solid #eee;
 }
@@ -142,32 +144,34 @@
   transform: translateY(-5px);
 }
 
-/* IMAGE */
-
 .recommend-card img {
   width: 100%;
-  height: 220px;
+  height: 170px; /* Reduced from 220px */
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
-/* TEXT */
-
 .recommend-card h4 {
-  margin-top: 12px;
+  margin-top: 10px;
   margin-bottom: 5px;
+  font-size: 15px;
 }
 
 .recommend-card p {
   color: gray;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.recommend-card h3 {
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
-/* BUTTON */
-
 .recommend-btn {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
+  font-size: 14px;
   border: none;
   background: #8b1e3f;
   color: white;
@@ -177,4 +181,75 @@
 
 .recommend-btn:hover {
   background: #6d1731;
+}
+
+/* ========================================= */
+/* RESPONSIVE MEDIA QUERIES                  */
+/* ========================================= */
+
+/* Tablet & Smaller Laptops */
+@media (max-width: 900px) {
+  .cart-container-flex {
+    flex-direction: column;
+  }
+  
+  .cart-items-section, 
+  .cart-summary-section {
+    width: 100%;
+    box-sizing: border-box;
+    flex: unset;
+  }
+  
+  .cart-summary-section {
+    margin-top: 10px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 600px) {
+  .cart-page {
+    margin: 20px auto;
+  }
+  
+  .cart-header h2 {
+    font-size: 24px;
+  }
+
+  .cart-items-section {
+    padding: 10px 15px;
+  }
+
+  /* Wrap the cart item layout nicely */
+  .cart-item-row {
+    flex-wrap: wrap; 
+  }
+  
+  .item-details {
+    min-width: 120px; /* Forces title to stay next to image */
+  }
+
+  .item-actions-right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #eee;
+  }
+
+  .total-item-price {
+    margin-bottom: 0;
+  }
+
+  /* Force 2 columns for recommendations on small screens */
+  .recommend-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .recommend-card img {
+    height: 140px; /* Make image even smaller for mobile */
+  }
 }

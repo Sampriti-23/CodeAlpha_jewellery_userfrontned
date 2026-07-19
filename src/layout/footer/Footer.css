@@ -94,7 +94,7 @@
 .footer-left {
   flex: 0 1 300px;
   /* Replaced 'auto' with a fixed value. You can tweak this number (e.g., 8%, 100px) to make the gap exactly as wide as you want */
-  margin-right: 12%; 
+  margin-right: 5%; 
 }
 
 .footer-left p {

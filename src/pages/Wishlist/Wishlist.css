@@ -4,7 +4,12 @@
 
 .empty-wishlist { text-align: center; padding: 50px; background: #f9f9f9; border-radius: 8px; }
 
-.wishlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+.wishlist-grid { 
+  display: grid; 
+  /* Desktop/Tablet default: Auto-adjusts, taking minimum 220px per item */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+  gap: 20px; 
+}
 
 .wishlist-card { border: 1px solid #eee; border-radius: 8px; overflow: hidden; background: #fff; transition: box-shadow 0.3s; }
 .wishlist-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -20,3 +25,44 @@
 .add-cart-btn:hover { background: #f0f4ff; }
 .remove-btn { color: #dc3545; }
 .remove-btn:hover { background: #fff0f0; }
+
+
+/* =========================================
+   Mobile Responsiveness (Phones & Tablets)
+   ========================================= */
+@media (max-width: 768px) {
+  .wishlist-page { 
+    margin: 20px auto; 
+    padding: 0 10px; 
+  }
+  
+  .wishlist-grid { 
+    /* 🔥 FORCES exactly 2 items per row on mobile */
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px; /* Shrinks the gap to save space */
+  }
+
+  .wishlist-card img { 
+    height: 150px; /* Prevents images from stretching too tall */
+  }
+
+  .wishlist-info { 
+    padding: 10px; 
+  }
+  
+  .wishlist-info h4 { 
+    font-size: 14px; /* Slightly smaller text */
+  }
+
+  .wishlist-actions button { 
+    padding: 8px 4px; 
+    font-size: 12px; /* Scales down the button icons and text */
+    gap: 4px; 
+  }
+  
+  /* Makes sure the sale price and original price wrap nicely if the phone screen is very narrow */
+  .wishlist-info div {
+    flex-wrap: wrap; 
+    gap: 4px !important;
+  }
+}

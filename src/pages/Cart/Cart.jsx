@@ -332,7 +332,7 @@ const Cart = () => {
           <div className="checkout-modal">
             <button className="close-modal" onClick={() => setShowCheckout(false)}><FaTimes /></button>
             <h2>Shipping Details</h2>
-            <p>Please enter your delivery address.</p>
+            <p>Please enter your delivery address.<br /></p>
             
             <form onSubmit={handleConfirmOrder}>
               <input type="text" name="address" placeholder="Full Address (House, Street)" required onChange={handleShippingChange} />

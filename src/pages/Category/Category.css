@@ -1,15 +1,16 @@
 .category-page {
   max-width: 100%;
   background-color: #fdf5f5; /* Soft background */
-  min-height: 100%;
-  background: cover;
+  min-height: 100vh; /* Changed from 100% to 100vh to ensure full viewport height */
+  background-size: cover;
 }
 
 .category-container {
-  padding-left:100px;
+  padding-left: 100px;
   padding-right: 100px;
   padding-top: 20px;
-  max-width:100%;
+  padding-bottom: 50px;
+  max-width: 100%;
 }
 
 .category-header {
@@ -30,10 +31,12 @@
   font-weight: normal;
 }
 
-/* 4-Column Grid layout */
+/* ========================================= */
+/* GRID LAYOUT (5 Columns Default)           */
+/* ========================================= */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(5, 1fr); /* Forces exactly 5 equal columns */
   gap: 25px;
 }
 
@@ -60,6 +63,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  position: relative;
 }
 
 .product-image {
@@ -165,4 +169,82 @@
   width: 100%;
   grid-column: 1 / -1;
   color: #666;
+}
+
+
+/* ========================================= */
+/* RESPONSIVE MEDIA QUERIES                  */
+/* ========================================= */
+
+/* Laptops / Smaller Desktops */
+@media (max-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 cards in a row */
+  }
+  .category-container {
+    padding: 20px 60px 40px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 cards in a row */
+  }
+  .category-container {
+    padding: 20px 30px 40px;
+  }
+}
+
+/* Mobile Phones (2 cards in a row) */
+@media (max-width: 600px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); /* Exactly 2 cards in a row */
+    gap: 12px; /* Reduced gap so cards aren't squeezed */
+  }
+  
+  .category-container {
+    padding: 20px 15px 40px; /* Removes massive desktop padding */
+  }
+  
+  .category-header h2 {
+    font-size: 20px;
+  }
+
+  /* Shrink card contents so 2 columns fit cleanly on small screens */
+  .product-image-wrapper {
+    height: 180px; 
+  }
+
+  .product-info {
+    padding: 12px; 
+  }
+
+  .product-name {
+    font-size: 15px; 
+  }
+
+  .product-desc {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+
+  .product-price {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .add-to-cart-btn {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+
+  .wishlist-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .heart-icon {
+    font-size: 16px;
+  }
 }

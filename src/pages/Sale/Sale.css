@@ -12,7 +12,7 @@
 }
 
 .onsale-container {
-  max-width: 1200px;
+  max-width: 1400px; /* Increased to comfortably fit 5 cards */
   margin: 0 auto;
   padding: 40px 20px;
 }
@@ -33,11 +33,11 @@
   font-size: 1.1rem;
 }
 
-/* --- Grid Layout --- */
+/* --- Grid Layout (Default Desktop) --- */
 .onsale-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(5, 1fr); /* 5 cards per row on large screens */
+  gap: 25px;
 }
 
 /* --- Card Styling --- */
@@ -103,6 +103,9 @@
   font-weight: 600;
   color: #333;
   margin: 0 0 5px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .onsale-cat {
@@ -119,7 +122,8 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
-  margin-top: auto; /* Pushes pricing to the bottom if names are short */
+  margin-top: auto;
+  flex-wrap: wrap;
 }
 
 .active-price {
@@ -152,10 +156,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .onsale-add-cart:hover {
-  background-color: #d9534f; /* Turns red on hover to match sale theme */
+  background-color: #d9534f;
 }
 
 .onsale-wishlist {
@@ -201,4 +208,75 @@
 
 .no-sale-products p {
   color: #777;
+}
+
+/* =========================================
+   Responsive Media Queries
+   ========================================= */
+
+/* Laptops / Smaller Desktops */
+@media (max-width: 1200px) {
+  .onsale-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 per row */
+  }
+}
+
+/* Tablets */
+@media (max-width: 992px) {
+  .onsale-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 per row */
+    gap: 20px;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
+  .onsale-container {
+    padding: 20px 10px;
+  }
+
+  .onsale-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .onsale-grid {
+    grid-template-columns: repeat(2, 1fr); /* Exactly 2 per row */
+    gap: 10px;
+  }
+
+  .onsale-info {
+    padding: 12px;
+  }
+
+  .onsale-name {
+    font-size: 0.9rem; /* Smaller font to fit mobile screens */
+  }
+
+  .active-price {
+    font-size: 1.1rem;
+  }
+
+  .old-price {
+    font-size: 0.85rem;
+  }
+
+  .discount-badge {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  /* Shrink buttons slightly so they fit next to each other */
+  .onsale-button-group {
+    gap: 5px;
+  }
+
+  .onsale-add-cart {
+    padding: 8px 5px;
+    font-size: 0.8rem;
+  }
+
+  .onsale-wishlist {
+    width: 35px;
+    font-size: 1rem;
+  }
 }

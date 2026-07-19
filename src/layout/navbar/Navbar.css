@@ -8,6 +8,7 @@
   align-items: center;
   box-sizing: border-box; 
   position: relative; /* REQUIRED FOR CENTERING THE LINKS */
+  z-index: 999; /* 🔥 Added this to keep Navbar and Dropdown above page content */
 }
 
 /* LEFT SECTION */
@@ -324,5 +325,72 @@
     width: 32px;
     height: 32px;
     font-size: 16px;
+  }
+}
+/* ========================================= */
+/* USER DETAILS DROPDOWN                     */
+/* ========================================= */
+.user-details-dropdown {
+  position: absolute;
+  top: 130%; /* Pushes it just below the circular icon */
+  right: 0;  /* Aligns the right edge of the box with the right edge of the icon */
+  background-color: #ffffff;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+  z-index: 1000;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #f0f0f0;
+}
+
+/* Little pointing arrow at the top of the box */
+.user-details-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 13px; /* Aligns with the middle of the icon */
+  width: 12px;
+  height: 12px;
+  background: white;
+  transform: rotate(45deg);
+  border-left: 1px solid #f0f0f0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.user-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Spacing between text lines */
+}
+
+.user-info-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  word-break: break-word; /* Prevents long emails from breaking the box layout */
+}
+
+.user-info-card .user-name {
+  font-weight: 700;
+  color: #8b1e3f; /* Matches your brand color */
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  margin-bottom: 2px;
+}
+
+.user-info-card .user-phone {
+  font-size: 13px;
+  color: #777;
+}
+
+/* Fix mobile alignment so it doesn't fall off the screen edge */
+@media (max-width: 500px) {
+  .user-details-dropdown {
+    right: -10px; 
+  }
+  
+  .user-details-dropdown::before {
+    right: 23px; /* Re-aligns arrow for mobile */
   }
 }
